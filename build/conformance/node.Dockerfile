@@ -2,7 +2,7 @@
 # unchanged. It takes the SDK from ../../../sdks/nodejs, so the two keep
 # their places in the tree. npm only links the SDK there, so the SDK's own
 # packages go into its directory first, as its package-lock.json has them.
-FROM node:20.19.5-slim
+FROM node:20.20.2-slim
 ARG agones=third_party/agones
 WORKDIR /agones
 COPY ${agones}/sdks/nodejs sdks/nodejs
