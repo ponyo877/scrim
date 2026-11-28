@@ -82,8 +82,12 @@ jobs:
             dist/scrim-*
             dist/checksums.txt
 
+      # The notes begin with the release of Agones this one is compatible with.
       - name: Attach them to the release
-        run: gh release create "$VERSION" dist/scrim-* dist/checksums.txt --generate-notes
+        run: |
+          agones=$(go list -m -f '{{.Version}}' agones.dev/agones)
+          gh release create "$VERSION" dist/scrim-* dist/checksums.txt \
+            --notes "Compatible with Agones $agones." --generate-notes
         env:
           GH_TOKEN: ${{ github.token }}
 

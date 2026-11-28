@@ -26,6 +26,24 @@ against Agones itself:
 The design document ([docs/design.md](design.md), in Japanese) has the
 details of both.
 
+## Following new releases of Agones
+
+scrim is compatible with one release of Agones at a time: the one its
+`go.mod` requires. Since the autumn of 2025, Agones has put out a release
+about every six weeks. scrim moves to each one before Agones puts out the
+next, so it is never more than one release behind. The pages of releases
+after v0.2.0 say which Agones release each is compatible with.
+
+A workflow looks for a new release of Agones every week. When there is
+one, it tries the mechanical part of the move (the Go module, the
+reference copy in `third_party/agones` and the version constant), builds,
+runs the tests, and opens an issue with the result, the rest of the steps,
+and every line that names the old release. The rest is done by hand.
+scrim calls Agones' own code for the resource types, defaulting and
+validation, so those follow the module. The controllers and the allocator
+are scrim's own, though, and its tests check the behaviour of the old
+release, so they would pass while a change Agones made there is missing.
+
 ## A game server
 
 | | Agones | scrim |

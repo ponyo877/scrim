@@ -13,6 +13,8 @@ welcome, in English or in Japanese.
 - **Compatibility is pinned to Agones v1.62.0.** Where scrim does what
   Agones does, it should do it the same way. A difference that is not
   written down in [docs/design.md](docs/design.md) is a bug worth reporting.
+  A move to a newer release of Agones starts from the issue that the
+  workflow `agones` opens for it, which lists the steps.
 - **A security issue** does not belong in a public issue. See
   [SECURITY.md](SECURITY.md).
 

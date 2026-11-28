@@ -1,0 +1,63 @@
+name: agones
+
+# Looks for a release of Agones newer than the one scrim is compatible
+# with. When there is one, build/ci/agones-follow.sh tries the first steps
+# of moving to it, and opens an issue that says how far that got and what
+# is left. The move itself is made by hand: docs/design.md says why, under
+# 本家の新しい版への追従.
+on:
+  schedule:
+    # Thursdays. Agones' recent releases came out on a Tuesday or a
+    # Wednesday, US time.
+    - cron: "17 3 * * 4"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: The release of Agones to try, such as v1.63.0 (the latest when left empty)
+        required: false
+  # A change to the script is tried on the release before the one scrim is
+  # compatible with: the steps run as they would, and the issue is only
+  # printed.
+  pull_request:
+    paths:
+      - build/ci/agones-follow.sh
+      - .github/workflows/agones.yml
+
+permissions:
+  contents: read
+  issues: write
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  follow:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: true
+      - uses: actions/setup-go@d8cbb8045d7f43706b9177cceb36c1f91a6644d5 # v7.1.0
+        with:
+          go-version-file: go.mod
+
+      - name: A newer release of Agones, tried, and an issue about it
+        if: github.event_name != 'pull_request'
+        run: build/ci/agones-follow.sh "$VERSION"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+
+      - name: The release before, tried as a test of the script
+        if: github.event_name == 'pull_request'
+        run: |
+          have=$(go list -m -f '{{.Version}}' agones.dev/agones)
+          before=$(git ls-remote --tags --refs "$(git config -f .gitmodules submodule.third_party/agones.url)" 'v*' |
+            sed 's|.*refs/tags/||' | grep -x 'v[0-9]*\.[0-9]*\.[0-9]*' | sort -V | grep -B1 -x "$have" | head -1)
+          DRY_RUN=1 build/ci/agones-follow.sh "$before" | tee issue.md
+          cat issue.md >> "$GITHUB_STEP_SUMMARY"
+          # The steps that only change files have to pass, whether or not
+          # scrim builds against an older Agones.
+          grep -q '^- \[x\] pkg/agones says' issue.md

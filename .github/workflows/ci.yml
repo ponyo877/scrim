@@ -334,7 +334,8 @@ jobs:
       - name: govulncheck
         run: go run golang.org/x/vuln/cmd/govulncheck@v1.10.0 ./...
 
-  # The reference copy of Agones is the version the build uses, untouched.
+  # The reference copy of Agones is the version the build uses, untouched,
+  # and the documents say that version is the one scrim is compatible with.
   pinned:
     runs-on: ubuntu-24.04
     timeout-minutes: 5
@@ -345,7 +346,7 @@ jobs:
       - uses: actions/setup-go@d8cbb8045d7f43706b9177cceb36c1f91a6644d5 # v7.1.0
         with:
           go-version-file: go.mod
-      - name: third_party/agones is the commit of the module's version
+      - name: third_party/agones and the documents follow the module's version
         run: build/ci/pinned.sh
 
   # The one check to require: it passes when every job above has passed,

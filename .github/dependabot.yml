@@ -3,7 +3,7 @@
 #
 # agones.dev/agones is not among them, nor the minor and major versions of
 # k8s.io: they move together with the release of Agones that scrim is
-# compatible with.
+# compatible with, which .github/workflows/agones.yml looks out for.
 version: 2
 updates:
   - package-ecosystem: gomod

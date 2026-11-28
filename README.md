@@ -246,7 +246,9 @@ agent through a unix socket, so the host's own firewall is not in the way.
 
 Compatibility is pinned to **Agones v1.62.0**. scrim uses the Agones
 API types and their own defaulting and validation as a Go module, so a
-manifest means here what it means there.
+manifest means here what it means there. scrim moves to each new release of
+Agones before the one after it comes out
+([how](docs/agones.md#following-new-releases-of-agones)).
 
 | Works as in Agones | Left out on purpose |
 |---|---|
