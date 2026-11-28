@@ -1,5 +1,5 @@
 # The Go SDK's conformance client of Agones (test/sdk/go), unchanged.
-FROM golang:1.26.5 AS build
+FROM golang:1.27.3 AS build
 ARG agones=third_party/agones
 WORKDIR /agones
 COPY ${agones}/go.mod ${agones}/go.sum ./

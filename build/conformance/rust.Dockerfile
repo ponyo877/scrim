@@ -2,7 +2,7 @@
 # The SDK compiles its protocol buffers when it is built, so protoc is
 # needed, and the .proto files of protobuf's own types, which Debian keeps
 # in libprotobuf-dev. RUN_ASYNC=true in the environment runs its async half.
-FROM rust:1.90.0 AS build
+FROM rust:1.99.1 AS build
 ARG agones=third_party/agones
 RUN apt-get update && apt-get install -y --no-install-recommends protobuf-compiler libprotobuf-dev && rm -rf /var/lib/apt/lists/*
 WORKDIR /agones
